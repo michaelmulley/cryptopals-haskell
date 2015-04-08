@@ -127,13 +127,15 @@ ex6 = do
 ex7 = do
     withFile "data/7.txt" ReadMode (\handle -> do
         contents <- C8.hGetContents handle
-        case B64.decode contents of
-            Right input -> do
-                let key = AES.initAES (C8Strict.pack "YELLOW SUBMARINE")
-                let decrypted = AES.decryptECB key (C8.toStrict input)
-                putStr $ show $ decrypted
-            Left err -> putStr err
+        putStr $ show $ ex7' contents
         )
+
+ex7' :: C8.ByteString -> Either String C8Strict.ByteString
+ex7' contents = do
+                  input <- B64.decode contents
+                  let key = AES.initAES (C8Strict.pack "YELLOW SUBMARINE")
+                  let decrypted = AES.decryptECB key (C8.toStrict input)
+                  return decrypted
 
 -- Exercise 8
 
